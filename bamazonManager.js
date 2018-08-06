@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -69,10 +70,14 @@ function viewProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         console.log()
-        console.log(`ID | Product Name | Department | Price | Quantity`);
-        res.forEach(element => {
-            console.log(`${element.item_id} | ${element.product_name} | ${element.department_name} | $${element.price} | ${element.stock_quantity}`);
+        var table = new Table({
+            head: ['ID', 'PRODUCT NAME', 'DEPARTMENT', 'PRICE', 'QUANTITY']
+          , colWidths: [10, 25, 25, 15, 15]
         });
+        res.forEach(element => {
+            table.push([element.item_id, element.product_name, element.department_name, element.price, element.stock_quantity]);
+        });
+        console.log(table.toString());
         restart();
     });   
 };
@@ -81,10 +86,14 @@ function viewLow() {
     connection.query("SELECT * FROM products WHERE stock_quantity<=5", function(err, res) {
         if (err) throw err;
         console.log()
-        console.log(`ID | Product Name | Department | Price | Quantity`);
-        res.forEach(element => {
-            console.log(`${element.item_id} | ${element.product_name} | ${element.department_name} | $${element.price} | ${element.stock_quantity}`);
+        var table = new Table({
+            head: ['ID', 'PRODUCT NAME', 'DEPARTMENT', 'PRICE', 'QUANTITY']
+          , colWidths: [10, 25, 25, 15, 15]
         });
+        res.forEach(element => {
+            table.push([element.item_id, element.product_name, element.department_name, element.price, element.stock_quantity]);
+        });
+        console.log(table.toString());
         restart();
     });   
 };

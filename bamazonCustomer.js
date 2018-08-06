@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -47,9 +48,13 @@ function viewAll() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         console.log()
-        res.forEach(element => {
-            console.log(`ID: ${element.item_id} | ${element.product_name} | $${element.price}`);
+        var table = new Table({
+            head: ['ID', 'PRODUCT NAME', 'PRICE'], colWidths: [10, 50, 15]
         });
+        res.forEach(element => {
+            table.push([element.item_id, element.product_name, element.price]);
+        });
+        console.log(table.toString());
         console.log();
         buyProduct();
     });   
@@ -71,9 +76,13 @@ function viewDepartments() {
             console.log()
             connection.query("SELECT * FROM products WHERE department_name=?", [answer.department], function(err, res) {
                 if (err) throw err;
-                res.forEach(element => {
-                    console.log(`ID: ${element.item_id} | ${element.product_name} | $${element.price}`);
+                var table = new Table({
+                    head: ['ID', 'PRODUCT NAME', 'PRICE'], colWidths: [10, 50, 15]
                 });
+                res.forEach(element => {
+                    table.push([element.item_id, element.product_name, element.price]);
+                });
+                console.log(table.toString());
                 console.log();
                 buyProduct();
             });
@@ -105,11 +114,12 @@ function buyProduct() {
                     if (res[0] !== null && res[0] !== undefined) {
                         var newStock = res[0].stock_quantity - answer.quantity;
                         var totalCost = res[0].price * answer.quantity;
+                        var totalRevenue = res[0].product_sales + totalCost;
                         if (newStock < 0) {
                             console.log("\nInsufficient quantity!\n");
                             storeFront();
                         } else {
-                            connection.query("UPDATE products SET ? WHERE ?", [{stock_quantity: newStock},{item_id: answer.id}],function(err, res) {
+                            connection.query("UPDATE products SET ?, ? WHERE ?", [{stock_quantity: newStock},{product_sales: totalRevenue},{item_id: answer.id}],function(err, res) {
                                 console.log(`\nTransaction successful. The total cost of your purchase is $${totalCost}\n`);
                                 storeFront();
                             });

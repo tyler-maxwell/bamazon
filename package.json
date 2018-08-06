@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tyler-maxwell/bamazon#readme",
   "dependencies": {
+    "cli-table": "^0.3.1",
     "inquirer": "^6.0.0",
     "mysql": "^2.16.0"
   }

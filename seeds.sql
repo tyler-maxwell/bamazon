@@ -14,4 +14,15 @@ INSERT INTO products (product_name, department_name, price, stock_quantity) VALU
 ("Turboman Action Figure", "Toys", 100.00, 1),
 ("Tickle Me Elmo", "Toys", 50.00, 3);
 
+INSERT INTO departments (department_name, over_head_costs) VALUES 
+("Personal Hygiene", 10000),
+("Tools", 25000),
+("Outdoor Furniture", 30000),
+("Houseware", 15000),
+("Pet Supplies", 20000),
+("Electronics", 75000),
+("Furniture", 50000),
+("Toys", 20000);
+
 SELECT * FROM products;
+SELECT * FROM departments;
